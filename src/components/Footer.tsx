@@ -1,4 +1,3 @@
-
 export function Footer() {
   return (
     <footer className="bg-muvad-darkGrey text-white py-12">
@@ -69,6 +68,7 @@ export function Footer() {
         <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-300 text-sm">© {new Date().getFullYear()} Muvad Consults. All rights reserved.</p>
           <p className="text-gray-300 text-sm mt-4 md:mt-0">
+            <a href="/privacy-policy" className="text-muvad-blue hover:text-white mr-4">Privacy Policy</a>
             Design by <a href="#" className="text-muvad-blue hover:text-white">Lovable.dev</a>
           </p>
         </div>
