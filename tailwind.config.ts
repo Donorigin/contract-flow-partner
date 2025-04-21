@@ -14,8 +14,16 @@ export default {
 			center: true,
 			padding: '2rem',
 			screens: {
+				sm: '640px',
+				md: '768px',
+				lg: '1024px',
+				xl: '1280px',
 				'2xl': '1400px'
 			}
+		},
+		fontFamily: {
+			sans: ['Poppins', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+			heading: ['Montserrat', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
 		},
 		extend: {
 			colors: {
@@ -31,6 +39,14 @@ export default {
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
 					foreground: 'hsl(var(--secondary-foreground))'
+				},
+				muvad: {
+					blue: '#0052CC',
+					lightBlue: '#4285F4',
+					yellow: '#FFCB05',
+					orange: '#FF6B35',
+					grey: '#F5F7FA',
+					darkGrey: '#333333',
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',
