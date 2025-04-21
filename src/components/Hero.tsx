@@ -6,11 +6,11 @@ export function Hero() {
     <section className="relative w-full overflow-hidden">
       <div className="absolute inset-0 z-0">
         <img 
-          src="/lovable-uploads/5fe32e39-a368-407c-ab14-37e26398d5b3.png" 
+          src="/lovable-uploads/photo-1605810230434-7631ac76ec81"
           alt="Construction professionals reviewing plans" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/50"></div>
       </div>
       
       <div className="container relative z-10 py-20 md:py-32">

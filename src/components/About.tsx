@@ -46,8 +46,8 @@ export function About() {
           <div className="relative">
             <div className="aspect-w-4 aspect-h-3 rounded-xl overflow-hidden shadow-2xl">
               <img 
-                src="/placeholder.svg" 
-                alt="Construction professionals discussing project" 
+                src="/lovable-uploads/photo-1519389950473-47ba0277781c" 
+                alt="Construction professionals collaborating" 
                 className="object-cover w-full h-full"
               />
             </div>
