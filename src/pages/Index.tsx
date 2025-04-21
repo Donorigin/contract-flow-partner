@@ -139,9 +139,16 @@ const Index = () => {
         </div>
       </section>
       
-      {/* CTA Section */}
-      <section className="py-16 bg-muvad-darkGrey text-white">
-        <div className="container">
+      {/* CTA Section with added image */}
+      <section className="py-16 bg-muvad-darkGrey text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 z-0">
+          <img 
+            src="/lovable-uploads/photo-1487058792275-0ad4aaf24ca7" 
+            alt="Construction background" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="container relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Ready to Win More Contracts Without Any Upfront Risk?
