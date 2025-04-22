@@ -11,11 +11,11 @@ export function Hero() {
           alt="Construction professionals reviewing plans" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-black/60"></div>
+        <div className="absolute inset-0 bg-black/40"></div>
       </div>
       
       <div className="container relative z-10 h-full flex items-center">
-        <div className="max-w-3xl py-8 px-10 bg-black/30 backdrop-blur-sm rounded-xl border border-white/10">
+        <div className="max-w-3xl">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 font-heading">
             Win More Contracts with Our Risk-Free Estimating Services
           </h1>

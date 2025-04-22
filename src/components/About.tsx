@@ -1,4 +1,3 @@
-
 export function About() {
   return (
     <section id="about" className="py-20 md:py-28 bg-muvad-grey">
@@ -47,7 +46,7 @@ export function About() {
           <div className="relative">
             <div className="aspect-w-4 aspect-h-3 rounded-xl overflow-hidden shadow-2xl border-4 border-white">
               <img 
-                src="/lovable-uploads/photo-1519389950473-47ba0277781c" 
+                src="/lovable-uploads/a9075c2c-77b5-4a83-a361-76ff6bcdc9bc.png" 
                 alt="Construction professionals collaborating" 
                 className="object-cover w-full h-full"
               />
