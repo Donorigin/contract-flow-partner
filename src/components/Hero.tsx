@@ -7,7 +7,7 @@ export function Hero() {
     <section className="relative w-full overflow-hidden h-[90vh]">
       <div className="absolute inset-0 z-0">
         <img 
-          src="/lovable-uploads/photo-1605810230434-7631ac76ec81"
+          src="/lovable-uploads/70f1171b-c244-48fa-9c47-7364f4e6fe92.png"
           alt="Construction professionals reviewing plans" 
           className="w-full h-full object-cover"
         />
