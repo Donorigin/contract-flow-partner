@@ -69,7 +69,8 @@ export function Navbar() {
               "bg-muvad-blue hover:bg-muvad-lightBlue text-white" :
               "bg-white hover:bg-white/90 text-muvad-blue"
           )}>
-            Get a Free Estimate
+            Book a Discovery Call
+
           </Button>
         </nav>
         
