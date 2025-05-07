@@ -5,23 +5,23 @@ export function Services() {
   const services = [
     {
       icon: <Calculator className="w-12 h-12 text-muvad-blue" />,
-      title: "Estimating",
-      description: "Accurate take-offs and detailed cost estimates tailored to your specific projects"
+      title: "Project Search and Estimating",
+      description: "We find active projects near you and prepare accurate take-offs and detailed cost estimate fir ITBs you receive"
     },
     {
       icon: <FilePen className="w-12 h-12 text-muvad-blue" />,
       title: "Proposal Writing",
-      description: "Professional, well-crafted proposals that present your services in the best light"
+      description: "Win more bids with expertly written proposals submitted on your companies letter head"
     },
     {
       icon: <PhoneCall className="w-12 h-12 text-muvad-blue" />,
       title: "Follow-Up",
-      description: "We handle client follow-ups to keep your bid in play and maximize chances of success"
+      description: "we follow up regulary with the GC untill we receive the award status"
     },
     {
       icon: <DollarSign className="w-12 h-12 text-muvad-blue" />,
       title: "No Upfront Cost",
-      description: "Pay only when you secure the contract — we take the risk with you"
+      description: "Pay only when you get paid. No Upfront costs -we wait with you until the GC pays you, then you pay us."
     }
   ];
 

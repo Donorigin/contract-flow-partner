@@ -24,7 +24,7 @@ export function Contact() {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-medium text-muvad-darkGrey">Phone</h3>
-                  <p className="text-gray-600">+1 (555) 123-4567</p>
+                  <p className="text-gray-600">(470) 354 3663</p>
                 </div>
               </div>
               <div className="flex items-start">
@@ -36,7 +36,7 @@ export function Contact() {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-medium text-muvad-darkGrey">Email</h3>
-                  <p className="text-gray-600">contact@muvadconsults.com</p>
+                  <p className="text-gray-600">projects@muvadconsults.com</p>
                 </div>
               </div>
               <div className="flex items-start">
@@ -48,7 +48,7 @@ export function Contact() {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-medium text-muvad-darkGrey">Address</h3>
-                  <p className="text-gray-600">123 Business Ave, Suite 500<br />Austin, TX 78701</p>
+                  <p className="text-gray-600">74710 hwy 111 palm Desert <br />CA 92260</p>
                 </div>
               </div>
             </div>

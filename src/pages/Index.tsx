@@ -23,9 +23,8 @@ const Index = () => {
               and cleaning win more contracts.
             </h2>
             <p className="text-lg text-gray-700 mb-6">
-              Our team handles take-offs, detailed estimates, and proposal submissions from 
-              start to finish — and with our <span className="font-semibold">no upfront cost</span> model, 
-              you only pay when you win.
+            We handle the take-offs and estimating, proposal submissions to the General Contractor, and follow up from start to finish –  
+            <span className="font-semibold">You only pay</span>when you get paid.
             </p>
             <Button className="bg-muvad-blue hover:bg-muvad-lightBlue text-white mt-4 px-6">
               Learn How It Works <ArrowRight className="ml-2 h-5 w-5" />
@@ -49,23 +48,23 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white/10 backdrop-blur-sm p-8 rounded-lg text-center relative">
               <div className="absolute -top-5 -left-5 bg-white text-muvad-blue rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">1</div>
-              <h3 className="text-xl font-bold mb-4">Submit Your Project</h3>
+              <h3 className="text-xl font-bold mb-4">Kickoff & Strategy Call</h3>
               <p className="text-white/80">
-                Send us your project details and specifications through our simple submission form
+                We start with discovery call to understand your goals, align on expectations, and set up tailored outbound campaigns to General contractors
               </p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm p-8 rounded-lg text-center relative">
               <div className="absolute -top-5 -left-5 bg-white text-muvad-blue rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">2</div>
-              <h3 className="text-xl font-bold mb-4">We Create Your Estimate & Proposal</h3>
+              <h3 className="text-xl font-bold mb-4">Proposal Preparation and Submission</h3>
               <p className="text-white/80">
-                Our team prepares a comprehensive, competitive bid package that positions you to win
+                We prepare and submit proposals for both ITBs  and active projects- positioned to help you win
               </p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm p-8 rounded-lg text-center relative">
               <div className="absolute -top-5 -left-5 bg-white text-muvad-blue rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold">3</div>
-              <h3 className="text-xl font-bold mb-4">Only Pay When You Win</h3>
+              <h3 className="text-xl font-bold mb-4">No Upfront Cost</h3>
               <p className="text-white/80">
-                No upfront costs — we only get paid when you secure the contract and get paid
+                No upfront cost - we only get paid when you get paid by the GC
               </p>
             </div>
           </div>
