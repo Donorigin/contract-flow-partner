@@ -1,10 +1,11 @@
 
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function Hero() {
   return (
-    <section className="relative w-full overflow-hidden h-[95vh] pt-16 md:pt-28">
+    <section className="relative w-full overflow-hidden h-[70vh] sm:h-[80vh] md:h-[95vh] pt-16 md:pt-28">
       <div className="absolute inset-0 z-0">
         <img 
           src="/lovable-uploads/70f1171b-c244-48fa-9c47-7364f4e6fe92.png"
@@ -16,10 +17,10 @@ export function Hero() {
       
       <div className="container relative z-10 h-full flex items-start md:items-center">
         <div className="max-w-3xl mt-8 md:mt-0">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 font-heading">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-4 md:mb-6 font-heading">
             Win More Contracts with Our NO-COST Estimating Services
           </h1>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl">
+          <p className="text-xl text-white/90 mb-6 md:mb-8 max-w-2xl">
             We help subcontractors secure more profitable projects with our comprehensive 
             take-offs, estimating, and proposal services - with no upfront costs.
           </p>
