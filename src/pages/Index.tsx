@@ -157,7 +157,7 @@ const Index = () => {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button className="bg-muvad-blue hover:bg-muvad-lightBlue text-white px-8 py-6 h-auto text-lg">
-                Get a Free Estimate
+                Book a Discovery Call
               </Button>
               <Button variant="outline" className="bg-transparent border-white text-white hover:bg-white/10 px-8 py-6 h-auto text-lg">
                 Learn More
