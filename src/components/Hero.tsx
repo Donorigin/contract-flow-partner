@@ -23,10 +23,10 @@ export function Hero() {
             We help subcontractors secure more profitable projects with our comprehensive 
             take-offs, estimating, and proposal services - with no upfront costs.
           </p>
-          <p className="text-lg text-white/80 mb-10 max-w-2xl">
+          {/* <p className="text-lg text-white/80 mb-10 max-w-2xl">
             Trusted by hundreds of construction professionals in painting, drywall, electrical, 
             plumbing, and HVAC trades across the country.
-          </p>
+          </p> */}
           <Button className="bg-muvad-blue hover:bg-muvad-lightBlue text-white text-lg px-8 py-6 h-auto rounded-full group transition-all duration-300 shadow-lg shadow-muvad-blue/30">
             Book a Discovery Call
             <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
