@@ -1,0 +1,16 @@
+
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://www.muvadconsults.com/$1",
+      "has": [
+        {
+          "type": "host",
+          "value": "muvadconsults.com"
+        }
+      ],
+      "statusCode": 308
+    }
+  ]
+}

@@ -4,22 +4,22 @@ import { ArrowRight } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="relative w-full overflow-hidden h-[90vh]">
+    <section className="relative w-full overflow-hidden h-[95vh] pt-20">
       <div className="absolute inset-0 z-0">
         <img 
           src="/lovable-uploads/70f1171b-c244-48fa-9c47-7364f4e6fe92.png"
           alt="Construction professionals reviewing plans" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-black/30"></div>
       </div>
       
       <div className="container relative z-10 h-full flex items-center">
-        <div className="max-w-3xl">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6 font-heading">
-          Win More Contracts with Our NO-COST Estimating Services
+        <div className="max-w-3xl mt-10">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-8 font-heading">
+            Win More Contracts with Our NO-COST Estimating Services
           </h1>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl">
+          <p className="text-xl text-white/90 mb-10 max-w-2xl">
             We help subcontractors secure more profitable projects with our comprehensive 
             take-offs, estimating, and proposal services - with no upfront costs.
           </p>
