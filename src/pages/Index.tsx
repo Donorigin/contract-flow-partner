@@ -27,7 +27,7 @@ const Index = () => {
             <span className="font-semibold">You only pay</span>when you get paid.
             </p>
             <Button className="bg-muvad-blue hover:bg-muvad-lightBlue text-white mt-4 px-6">
-              Learn How It Works <ArrowRight className="ml-2 h-5 w-5" />
+              Book a Discovery Call <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
         </div>
