@@ -1,7 +1,6 @@
 
 import { Button } from "./ui/button";
 import { ArrowRight } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export function Hero() {
   return (
@@ -11,6 +10,8 @@ export function Hero() {
           src="/lovable-uploads/70f1171b-c244-48fa-9c47-7364f4e6fe92.png"
           alt="Construction professionals reviewing plans" 
           className="w-full h-full object-cover"
+          loading="eager"
+          fetchpriority="high"
         />
         <div className="absolute inset-0 bg-black/15"></div>
       </div>

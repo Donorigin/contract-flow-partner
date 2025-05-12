@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { Menu, X, Building } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -29,7 +30,7 @@ export function Navbar() {
       scrolled ? "bg-white/90 backdrop-blur-md shadow-md" : "bg-transparent"
     )}>
       <div className="container flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <Building className={cn(
             "h-8 w-8 transition-colors duration-300",
             scrolled ? "text-muvad-blue" : "text-white"
@@ -38,7 +39,7 @@ export function Navbar() {
             "text-xl font-bold transition-colors duration-300",
             scrolled ? "text-muvad-blue" : "text-white"
           )}>MUVAD CONSULTS</span>
-        </a>
+        </Link>
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
@@ -56,6 +57,13 @@ export function Navbar() {
             About
             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-muvad-blue group-hover:w-full transition-all duration-300"></span>
           </a>
+          <Link to="/blog" className={cn(
+            "text-base font-medium hover:text-muvad-blue transition-colors relative group",
+            scrolled ? "text-gray-700" : "text-white"
+          )}>
+            Blog
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-muvad-blue group-hover:w-full transition-all duration-300"></span>
+          </Link>
           <a href="#contact" className={cn(
             "text-base font-medium hover:text-muvad-blue transition-colors relative group",
             scrolled ? "text-gray-700" : "text-white"
@@ -70,7 +78,6 @@ export function Navbar() {
               "bg-white hover:bg-white/90 text-muvad-blue"
           )}>
             Book a Discovery Call
-
           </Button>
         </nav>
         
@@ -107,6 +114,13 @@ export function Navbar() {
           >
             About
           </a>
+          <Link 
+            to="/blog" 
+            className="text-base font-medium text-gray-700 hover:text-muvad-blue p-2 rounded-lg hover:bg-gray-100 transition-all"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Blog
+          </Link>
           <a 
             href="#contact" 
             className="text-base font-medium text-gray-700 hover:text-muvad-blue p-2 rounded-lg hover:bg-gray-100 transition-all"
@@ -115,7 +129,7 @@ export function Navbar() {
             Contact
           </a>
           <Button className="bg-muvad-blue hover:bg-muvad-lightBlue text-white w-full rounded-lg">
-            Get a Free Estimate
+            Book a Discovery Call
           </Button>
         </div>
       </div>

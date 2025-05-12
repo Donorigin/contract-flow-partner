@@ -7,6 +7,7 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Calculator, FilePen, PhoneCall, DollarSign, ArrowRight } from "lucide-react";
+import { BlogSection } from "@/components/BlogSection";
 
 const Index = () => {
   return (
@@ -138,6 +139,9 @@ const Index = () => {
         </div>
       </section>
       
+      {/* Blog Section */}
+      <BlogSection />
+      
       {/* CTA Section with added image */}
       <section className="py-16 bg-muvad-darkGrey text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-20 z-0">
@@ -145,6 +149,9 @@ const Index = () => {
             src="/lovable-uploads/photo-1487058792275-0ad4aaf24ca7" 
             alt="Construction background" 
             className="w-full h-full object-cover"
+            loading="lazy"
+            width={1200}
+            height={600}
           />
         </div>
         <div className="container relative z-10">
