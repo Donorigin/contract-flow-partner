@@ -1,12 +1,21 @@
+
 import { useParams } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Tag, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Blog, getBlogDetail, getBlogs, FALLBACK_BLOGS } from "@/services/api";
+import { Blog, getBlogDetail, getBlogs } from "@/services/api";
 import { useToast } from "@/components/ui/use-toast";
+import markdownIt from "markdown-it";
+
+// Initialize markdown parser
+const md = markdownIt({
+  html: true,
+  breaks: true,
+  linkify: true,
+});
 
 export default function BlogDetail() {
   const { toast } = useToast();
@@ -40,26 +49,12 @@ export default function BlogDetail() {
         console.error("Error fetching blog:", error);
         toast({
           title: "Failed to load blog post",
-          description: "Using fallback data. Please try again later.",
+          description: "Please try again later.",
           variant: "destructive",
         });
         
-        // Use fallback data
-        const fallbackPost = FALLBACK_BLOGS.find(post => post.id.toString() === id);
-        if (fallbackPost) {
-          setPost(fallbackPost as unknown as Blog);
-          
-          // Set related posts from fallback data
-          const related = FALLBACK_BLOGS.filter(post => post.id.toString() !== id);
-          setRelatedPosts(related as unknown as Blog[]);
-          
-          // Get unique categories from fallback data
-          const uniqueCategories = Array.from(new Set(FALLBACK_BLOGS.map(post => post.category)));
-          setCategories(uniqueCategories);
-        } else {
-          // No post found even in fallback data
-          setPost(null);
-        }
+        // Error state - post will be null
+        setPost(null);
       } finally {
         setIsLoading(false);
       }
@@ -85,6 +80,9 @@ export default function BlogDetail() {
       </div>
     );
   }
+
+  // Convert markdown to HTML if we have content
+  const htmlContent = post?.content ? md.render(post.content) : '';
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -115,12 +113,16 @@ export default function BlogDetail() {
               
               <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm md:text-base text-white/80">
                 <div className="flex items-center">
+                  <User className="h-4 w-4 mr-2" />
+                  <span>{post?.author || 'Admin'}</span>
+                </div>
+                <div className="flex items-center">
                   <Calendar className="h-4 w-4 mr-2" />
-                  <span>{post?.date}</span>
+                  <span>{post?.date || new Date(post?.published_date || '').toLocaleDateString()}</span>
                 </div>
                 <div className="flex items-center">
                   <Clock className="h-4 w-4 mr-2" />
-                  <span>{post?.readTime}</span>
+                  <span>{post?.readTime || `${post?.time_to_read} min read`}</span>
                 </div>
                 <div className="flex items-center">
                   <Tag className="h-4 w-4 mr-2" />
@@ -136,18 +138,18 @@ export default function BlogDetail() {
         <div className="container">
           {isLoading ? (
             <div className="relative h-[300px] md:h-[400px] rounded-lg overflow-hidden mb-12 bg-gray-200 animate-pulse"></div>
-          ) : (
+          ) : post?.image ? (
             <div className="relative h-[300px] md:h-[400px] lg:h-[500px] rounded-lg overflow-hidden mb-12">
               <img 
-                src={post?.image}
-                alt={post?.title}
+                src={post.image}
+                alt={post.title}
                 className="w-full h-full object-cover"
                 loading="lazy"
                 width={1200}
                 height={600}
               />
             </div>
-          )}
+          ) : null}
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <div className="lg:col-span-8">
@@ -160,7 +162,7 @@ export default function BlogDetail() {
                 </div>
               ) : (
                 <article className="prose prose-lg max-w-none">
-                  <div dangerouslySetInnerHTML={{ __html: post?.content || "" }} />
+                  <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
                 </article>
               )}
               
@@ -195,7 +197,7 @@ export default function BlogDetail() {
                           {relatedPost.title}
                         </Link>
                         <div className="text-sm text-gray-500 mt-1">
-                          {relatedPost.date} • {relatedPost.readTime}
+                          {relatedPost.date || new Date(relatedPost.published_date || '').toLocaleDateString()} • {relatedPost.readTime || `${relatedPost.time_to_read} min read`}
                         </div>
                       </div>
                     ))}
