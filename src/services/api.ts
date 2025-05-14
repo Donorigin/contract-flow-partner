@@ -104,6 +104,19 @@ export const FALLBACK_BLOGS = [
   }
 ];
 
+// Function to format image URLs properly
+const formatImageUrl = (imageUrl: string | null): string | null => {
+  if (!imageUrl) return null;
+  
+  // If it's already an absolute URL or a local asset, return as is
+  if (imageUrl.startsWith('http') || imageUrl.startsWith('/lovable-uploads')) {
+    return imageUrl;
+  }
+  
+  // Otherwise, prepend the API base URL
+  return `${API_BASE_URL}${imageUrl.startsWith('/') ? '' : '/'}${imageUrl}`;
+};
+
 // Message creation function with improved error handling
 export const createMessage = async (messageData: Message): Promise<any> => {
   try {
@@ -123,6 +136,8 @@ export const createMessage = async (messageData: Message): Promise<any> => {
 const transformBlogData = (blog: any): Blog => {
   return {
     ...blog,
+    // Format image URL properly
+    image: formatImageUrl(blog.image),
     // Add compatibility fields for existing components
     date: blog.published_date ? new Date(blog.published_date).toLocaleDateString('en-US', { 
       year: 'numeric', 
