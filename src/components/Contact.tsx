@@ -1,10 +1,72 @@
 
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { PhoneCall } from "lucide-react";
+import { createMessage } from "@/services/api";
+import { useToast } from "@/components/ui/use-toast";
 
 export function Contact() {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    full_name: "",
+    company_name: "",
+    email: "",
+    phone_number: "",
+    service_type: "Estimating",
+    project_details: ""
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.full_name || !formData.email || !formData.service_type || !formData.project_details) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      await createMessage(formData);
+      
+      toast({
+        title: "Message Sent!",
+        description: "We've received your message and will get back to you soon.",
+      });
+      
+      // Clear form
+      setFormData({
+        full_name: "",
+        company_name: "",
+        email: "",
+        phone_number: "",
+        service_type: "Estimating",
+        project_details: ""
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "There was a problem sending your message. Please try again.",
+        variant: "destructive",
+      });
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="py-16 md:py-24 bg-white">
       <div className="container">
@@ -56,41 +118,80 @@ export function Contact() {
           
           <div className="bg-muvad-grey p-8 rounded-xl shadow-sm">
             <h3 className="text-2xl font-bold text-muvad-darkGrey mb-6">Get a Free Estimate</h3>
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                  <Input id="name" placeholder="John Smith" className="w-full" />
+                  <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                  <Input 
+                    id="full_name" 
+                    value={formData.full_name}
+                    onChange={handleInputChange}
+                    placeholder="John Smith" 
+                    className="w-full" 
+                  />
                 </div>
                 <div>
-                  <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
-                  <Input id="company" placeholder="Your Company" className="w-full" />
+                  <label htmlFor="company_name" className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+                  <Input 
+                    id="company_name"
+                    value={formData.company_name} 
+                    onChange={handleInputChange}
+                    placeholder="Your Company" 
+                    className="w-full" 
+                  />
                 </div>
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                <Input id="email" type="email" placeholder="john@example.com" className="w-full" />
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                <Input 
+                  id="email" 
+                  type="email"
+                  value={formData.email} 
+                  onChange={handleInputChange}
+                  placeholder="john@example.com" 
+                  className="w-full" 
+                />
               </div>
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                <Input id="phone" placeholder="(555) 123-4567" className="w-full" />
+                <label htmlFor="phone_number" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <Input 
+                  id="phone_number"
+                  value={formData.phone_number} 
+                  onChange={handleInputChange}
+                  placeholder="(555) 123-4567" 
+                  className="w-full" 
+                />
               </div>
               <div>
-                <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-1">Service Type</label>
-                <select id="service" className="w-full rounded-md border-gray-300 shadow-sm focus:border-muvad-blue focus:ring focus:ring-muvad-blue/10">
-                  <option value="" disabled>Select a Service</option>
-                  <option value="estimating">Estimating</option>
-                  <option value="proposals">Proposal Writing</option>
-                  <option value="followup">Follow-Up Services</option>
-                  <option value="complete">Complete Package</option>
+                <label htmlFor="service_type" className="block text-sm font-medium text-gray-700 mb-1">Service Type *</label>
+                <select 
+                  id="service_type"
+                  value={formData.service_type}
+                  onChange={handleInputChange} 
+                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-muvad-blue focus:ring focus:ring-muvad-blue/10"
+                >
+                  <option value="Estimating">Estimating</option>
+                  <option value="ITBs">ITBs</option>
+                  <option value="Lead Resercher">Lead Researcher</option>
+                  <option value="Full Package">Complete Package</option>
                 </select>
               </div>
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">Project Details</label>
-                <Textarea id="message" placeholder="Tell us about your project..." className="w-full min-h-[120px]" />
+                <label htmlFor="project_details" className="block text-sm font-medium text-gray-700 mb-1">Project Details *</label>
+                <Textarea 
+                  id="project_details"
+                  value={formData.project_details}
+                  onChange={handleInputChange} 
+                  placeholder="Tell us about your project..." 
+                  className="w-full min-h-[120px]" 
+                />
               </div>
-              <Button className="w-full bg-muvad-blue hover:bg-muvad-lightBlue text-white">
-                Submit Request
+              <Button 
+                type="submit" 
+                className="w-full bg-muvad-blue hover:bg-muvad-lightBlue text-white"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Submitting..." : "Submit Request"}
               </Button>
             </form>
           </div>

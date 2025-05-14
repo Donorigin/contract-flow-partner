@@ -1,4 +1,3 @@
-
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "@/components/ui/card";
@@ -6,10 +5,12 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Blog as BlogType, getBlogs } from "@/services/api";
+import { useToast } from "@/components/ui/use-toast";
 
-// Sample blog posts data - using the same data as in BlogDetail
-const BLOG_POSTS = [
+// Sample blog posts data for fallback
+const FALLBACK_POSTS = [
   {
     id: "1",
     title: "5 Ways to Win More Contracts as a Subcontractor",
@@ -66,15 +67,43 @@ const BLOG_POSTS = [
   }
 ];
 
-// Get unique categories from the blog posts
-const CATEGORIES = Array.from(new Set(BLOG_POSTS.map(post => post.category)));
-
 export default function Blog() {
+  const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [blogPosts, setBlogPosts] = useState<BlogType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState<string[]>([]);
+  
+  useEffect(() => {
+    const fetchBlogsData = async () => {
+      try {
+        const data = await getBlogs();
+        setBlogPosts(data);
+        
+        // Extract unique categories
+        const uniqueCategories = Array.from(new Set(data.map(post => post.category)));
+        setCategories(uniqueCategories);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+        toast({
+          title: "Failed to load blogs",
+          description: "Using fallback data instead. Please try again later.",
+          variant: "destructive",
+        });
+        // Use fallback data
+        setBlogPosts(FALLBACK_POSTS as unknown as BlogType[]);
+        setCategories(Array.from(new Set(FALLBACK_POSTS.map(post => post.category))));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBlogsData();
+  }, [toast]);
   
   // Filter posts based on search query and selected category
-  const filteredPosts = BLOG_POSTS.filter(post => {
+  const filteredPosts = blogPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === null || post.category === selectedCategory;
@@ -129,7 +158,7 @@ export default function Blog() {
                     All
                   </Button>
                   
-                  {CATEGORIES.map(category => (
+                  {categories.map(category => (
                     <Button
                       key={category}
                       variant={selectedCategory === category ? "default" : "outline"}
@@ -143,7 +172,20 @@ export default function Blog() {
                 </div>
               </div>
               
-              {filteredPosts.length > 0 ? (
+              {isLoading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {[1, 2, 3, 4].map((i) => (
+                    <Card key={i} className="overflow-hidden bg-white h-full flex flex-col">
+                      <div className="h-48 bg-gray-200 animate-pulse"></div>
+                      <CardContent className="pt-6 flex-grow">
+                        <div className="h-4 bg-gray-200 animate-pulse mb-2 w-1/3"></div>
+                        <div className="h-6 bg-gray-200 animate-pulse mb-2"></div>
+                        <div className="h-4 bg-gray-200 animate-pulse w-3/4"></div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              ) : filteredPosts.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {filteredPosts.map((post) => (
                     <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 bg-white h-full flex flex-col">
@@ -234,7 +276,7 @@ export default function Blog() {
                     All Categories
                   </button>
                   
-                  {CATEGORIES.map(category => (
+                  {categories.map(category => (
                     <button 
                       key={category}
                       className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
