@@ -51,13 +51,13 @@ export function About() {
                 className="object-cover w-full h-full"
               />
             </div>
-            <div className="absolute -bottom-6 -right-6 bg-muvad-blue text-white p-8 rounded-lg shadow-xl transform rotate-2 hover:rotate-0 transition-transform">
+            {/* <div className="absolute -bottom-6 -right-6 bg-muvad-blue text-white p-8 rounded-lg shadow-xl transform rotate-2 hover:rotate-0 transition-transform">
               <div className="text-center">
-                <p className="text-xl font-semibold">We also power</p>
-                <p className="text-2xl font-bold">muvadplaybox.com</p>
-                <p className="text-white/70">(e-commerce)</p>
+                <p className="text-xl font-semibold">Email Us At</p>
+                <p className="text-2xl font-bold">projects@muvadconsults.com</p>
+                <p className="text-white/70">(MuvadConsults)</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
