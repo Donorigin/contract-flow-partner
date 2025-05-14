@@ -5,11 +5,11 @@ import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Blog, getBlogDetail, getBlogs } from "@/services/api";
+import { Blog, getBlogDetail, getBlogs, FALLBACK_BLOGS } from "@/services/api";
 import { useToast } from "@/components/ui/use-toast";
 
 // Sample blog posts data for fallback
-const FALLBACK_POSTS = [
+const FALLBACK_BLOGS = [
   {
     id: "1",
     title: "5 Ways to Win More Contracts as a Subcontractor",
@@ -171,21 +171,21 @@ export default function BlogDetail() {
         console.error("Error fetching blog:", error);
         toast({
           title: "Failed to load blog post",
-          description: "Using fallback data instead. Please try again later.",
+          description: "Using fallback data. Please try again later.",
           variant: "destructive",
         });
         
         // Use fallback data
-        const fallbackPost = FALLBACK_POSTS.find(post => post.id.toString() === id);
+        const fallbackPost = FALLBACK_BLOGS.find(post => post.id.toString() === id);
         if (fallbackPost) {
           setPost(fallbackPost as unknown as Blog);
           
           // Set related posts from fallback data
-          const related = FALLBACK_POSTS.filter(post => post.id.toString() !== id);
+          const related = FALLBACK_BLOGS.filter(post => post.id.toString() !== id);
           setRelatedPosts(related as unknown as Blog[]);
           
           // Get unique categories from fallback data
-          const uniqueCategories = Array.from(new Set(FALLBACK_POSTS.map(post => post.category)));
+          const uniqueCategories = Array.from(new Set(FALLBACK_BLOGS.map(post => post.category)));
           setCategories(uniqueCategories);
         } else {
           // No post found even in fallback data
@@ -231,6 +231,7 @@ export default function BlogDetail() {
           </Button>
           
           {isLoading ? (
+            // ... keep existing code (loading skeletons)
             <>
               <div className="h-12 bg-gray-600 w-3/4 animate-pulse mb-6 rounded"></div>
               <div className="flex flex-wrap items-center gap-4 md:gap-6">
@@ -239,6 +240,7 @@ export default function BlogDetail() {
               </div>
             </>
           ) : (
+            // ... keep existing code (blog title and meta info)
             <>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
                 {post?.title}

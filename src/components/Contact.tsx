@@ -64,9 +64,19 @@ export function Contact() {
         project_details: ""
       });
     } catch (error) {
+      // Handle different types of errors more specifically
+      let errorMessage = "There was a problem sending your message. Please try again.";
+      
+      if (error instanceof Error) {
+        // If it's a network error, provide more specific guidance
+        if (error.message.includes("Network error")) {
+          errorMessage = "Unable to connect to our servers. Your message has been saved. Please try again when your connection improves.";
+        }
+      }
+      
       toast({
         title: "Error",
-        description: "There was a problem sending your message. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
       console.error(error);
@@ -176,7 +186,7 @@ export function Contact() {
                   id="service_type"
                   value={formData.service_type}
                   onChange={handleInputChange} 
-                  className="w-full rounded-md border-gray-300 shadow-sm focus:border-muvad-blue focus:ring focus:ring-muvad-blue/10"
+                  className="w-full rounded-md border border-gray-300 shadow-sm focus:border-muvad-blue focus:ring focus:ring-muvad-blue/10 p-2"
                 >
                   <option value="Estimating">Estimating</option>
                   <option value="ITBs">ITBs</option>

@@ -4,39 +4,8 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardTitle } from "./ui/card";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Blog, getBlogs } from "@/services/api";
+import { Blog, getBlogs, FALLBACK_BLOGS } from "@/services/api";
 import { useToast } from "@/components/ui/use-toast";
-
-// Fallback data if API fails
-const BLOG_PREVIEW = [
-  {
-    id: 1,
-    title: "5 Ways to Win More Contracts as a Subcontractor",
-    excerpt: "Learn the strategies that top subcontractors use to secure more projects and increase their revenue.",
-    date: "May 8, 2025",
-    category: "Business Growth",
-    image: "/lovable-uploads/photo-1487058792275-0ad4aaf24ca7",
-    readTime: "5 min read"
-  },
-  {
-    id: 2,
-    title: "Understanding the True Cost of Estimating Services",
-    excerpt: "Explore how our no-upfront-cost model helps subcontractors grow their business without financial risk.",
-    date: "May 2, 2025",
-    category: "Estimating",
-    image: "/lovable-uploads/photo-1472396961693-142e6e269027",
-    readTime: "4 min read"
-  },
-  {
-    id: 3,
-    title: "How to Prepare Perfect Proposals for General Contractors",
-    excerpt: "Our expert tips on creating proposals that stand out and win the approval of general contractors.",
-    date: "April 28, 2025",
-    category: "Proposals",
-    image: "/lovable-uploads/photo-1466721591366-2d5fba72006d",
-    readTime: "6 min read"
-  }
-];
 
 export function BlogSection() {
   const { toast } = useToast();
@@ -56,7 +25,7 @@ export function BlogSection() {
           variant: "destructive",
         });
         // Use fallback data if API fails
-        setBlogs(BLOG_PREVIEW as unknown as Blog[]);
+        setBlogs(FALLBACK_BLOGS as Blog[]);
       } finally {
         setIsLoading(false);
       }

@@ -6,7 +6,7 @@ import { ArrowRight, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { Blog as BlogType, getBlogs } from "@/services/api";
+import { Blog as BlogType, getBlogs, FALLBACK_BLOGS } from "@/services/api";
 import { useToast } from "@/components/ui/use-toast";
 
 // Sample blog posts data for fallback
@@ -92,8 +92,8 @@ export default function Blog() {
           variant: "destructive",
         });
         // Use fallback data
-        setBlogPosts(FALLBACK_POSTS as unknown as BlogType[]);
-        setCategories(Array.from(new Set(FALLBACK_POSTS.map(post => post.category))));
+        setBlogPosts(FALLBACK_BLOGS as unknown as BlogType[]);
+        setCategories(Array.from(new Set(FALLBACK_BLOGS.map(post => post.category))));
       } finally {
         setIsLoading(false);
       }
