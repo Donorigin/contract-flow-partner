@@ -15,13 +15,21 @@ export function Contact() {
     company_name: "",
     email: "",
     phone_number: "",
-    service_type: "Estimating",
+    service_type: "Estimating" as "Estimating" | "ITBs" | "Lead Resercher" | "Full Package",
     project_details: ""
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { id, value } = e.target;
-    setFormData((prev) => ({ ...prev, [id]: value }));
+    
+    if (id === 'service_type') {
+      setFormData((prev) => ({ 
+        ...prev, 
+        [id]: value as "Estimating" | "ITBs" | "Lead Resercher" | "Full Package" 
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [id]: value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,7 +60,7 @@ export function Contact() {
         company_name: "",
         email: "",
         phone_number: "",
-        service_type: "Estimating",
+        service_type: "Estimating" as "Estimating" | "ITBs" | "Lead Resercher" | "Full Package",
         project_details: ""
       });
     } catch (error) {

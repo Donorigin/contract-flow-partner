@@ -11,7 +11,7 @@ export function Hero() {
           alt="Construction professionals reviewing plans" 
           className="w-full h-full object-cover"
           loading="eager"
-          fetchpriority="high"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-black/15"></div>
       </div>

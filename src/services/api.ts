@@ -15,7 +15,7 @@ export interface Message {
   company_name: string | null;
   email: string;
   phone_number: string | null;
-  service_type: 'Estimating' | 'ITBs' | 'Lead Resercher' | 'Full Package';
+  service_type: "Estimating" | "ITBs" | "Lead Resercher" | "Full Package";
   project_details: string;
 }
 
