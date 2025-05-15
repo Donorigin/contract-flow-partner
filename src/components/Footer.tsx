@@ -1,3 +1,6 @@
+
+import { Link } from "react-router-dom";
+
 export function Footer() {
   return (
     <footer className="bg-muvad-darkGrey text-white py-12">
@@ -58,8 +61,8 @@ export function Footer() {
             <ul className="space-y-2">
               <li><a href="#about" className="text-gray-300 hover:text-white">About Us</a></li>
               <li><a href="#contact" className="text-gray-300 hover:text-white">Contact</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white">Privacy Policy</a></li>
-              <li><a href="#" className="text-gray-300 hover:text-white">Terms of Service</a></li>
+              <li><Link to="/privacy-policy" className="text-gray-300 hover:text-white">Privacy Policy</Link></li>
+              <li><Link to="/terms-and-conditions" className="text-gray-300 hover:text-white">Terms & Conditions</Link></li>
               <li><a href="http://muvadplaybox.com" className="text-gray-300 hover:text-white">Muvad Playbox</a></li>
             </ul>
           </div>
@@ -68,7 +71,8 @@ export function Footer() {
         <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-300 text-sm">© {new Date().getFullYear()} Muvad Consults. All rights reserved.</p>
           <p className="text-gray-300 text-sm mt-4 md:mt-0">
-            <a href="/privacy-policy" className="text-muvad-blue hover:text-white mr-4">Privacy Policy</a>
+            <Link to="/privacy-policy" className="text-muvad-blue hover:text-white mr-4">Privacy Policy</Link>
+            <Link to="/terms-and-conditions" className="text-muvad-blue hover:text-white mr-4">Terms & Conditions</Link>
             Design by <a href="#" className="text-muvad-blue hover:text-white">Lovable.dev</a>
           </p>
         </div>
