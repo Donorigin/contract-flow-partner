@@ -1,9 +1,9 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, LogOut, Edit, Home, FileText } from "lucide-react";
+import { Menu, X, LogOut, Home, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
+// import { useAuth } from "@/hooks/useAuth"; -- Temporarily removed
 
 type AdminLayoutProps = {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ type AdminLayoutProps = {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { logout } = useAuth();
+  // const { logout } = useAuth(); -- Temporarily removed
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -19,7 +19,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   };
 
   const handleLogout = () => {
-    logout();
+    // Temporary simplified logout that doesn't use useAuth
+    localStorage.removeItem("isAuthenticated");
     navigate("/login");
   };
 

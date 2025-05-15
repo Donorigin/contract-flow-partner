@@ -49,32 +49,31 @@ export default function Login() {
   const onSubmit = (data: LoginFormValues) => {
     setIsLoading(true);
     
-    // Simulate API call with timeout
+    // Simulate API call with timeout - temporarily bypass credential check
     setTimeout(() => {
-      if (data.email === ADMIN_EMAIL && data.password === ADMIN_PASSWORD) {
-        // Store authentication state in localStorage (in a real app, use a more secure method)
-        localStorage.setItem("isAuthenticated", "true");
-        
-        toast({
-          title: "Login successful",
-          description: "Welcome to the admin dashboard",
-        });
-        
-        // Redirect to admin dashboard
-        navigate("/admin/blogs");
-      } else {
-        toast({
-          title: "Login failed",
-          description: "Invalid email or password",
-          variant: "destructive",
-        });
-      }
+      // Store authentication state in localStorage (in a real app, use a more secure method)
+      localStorage.setItem("isAuthenticated", "true");
+      
+      toast({
+        title: "Login successful",
+        description: "Welcome to the admin dashboard",
+      });
+      
+      // Redirect to admin dashboard
+      navigate("/admin/blogs");
+      
       setIsLoading(false);
-    }, 1000);
+    }, 500);
   };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  // Temporary bypass function - added for development
+  const bypassLogin = () => {
+    localStorage.setItem("isAuthenticated", "true");
+    navigate("/admin/blogs");
   };
 
   return (
@@ -162,6 +161,18 @@ export default function Login() {
                 </>
               )}
             </Button>
+
+            {/* Temporary for development - added bypass button */}
+            <div className="text-center mt-4">
+              <Button 
+                type="button" 
+                variant="ghost" 
+                onClick={bypassLogin}
+                className="text-sm"
+              >
+                Bypass Login (Development Only)
+              </Button>
+            </div>
           </form>
         </Form>
       </div>
