@@ -10,6 +10,11 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
+import Login from "./pages/Login";
+import AdminBlogs from "./pages/AdminBlogs";
+import CreateBlog from "./pages/CreateBlog";
+import EditBlog from "./pages/EditBlog";
+import AuthGuard from "./components/AuthGuard";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +30,34 @@ const App = () => (
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:id" element={<BlogDetail />} />
+          <Route path="/login" element={<Login />} />
+          
+          {/* Admin Routes - Protected by AuthGuard */}
+          <Route 
+            path="/admin/blogs" 
+            element={
+              <AuthGuard>
+                <AdminBlogs />
+              </AuthGuard>
+            } 
+          />
+          <Route 
+            path="/admin/blogs/create" 
+            element={
+              <AuthGuard>
+                <CreateBlog />
+              </AuthGuard>
+            } 
+          />
+          <Route 
+            path="/admin/blogs/edit/:id" 
+            element={
+              <AuthGuard>
+                <EditBlog />
+              </AuthGuard>
+            } 
+          />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
