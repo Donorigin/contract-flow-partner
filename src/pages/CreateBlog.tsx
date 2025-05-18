@@ -13,7 +13,7 @@ export default function CreateBlog() {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleSubmit = async (data: BlogFormValues) => {
+  const handleSubmit = async (data: BlogFormValues, imageFile?: File) => {
     setIsLoading(true);
     try {
       // Format the time_to_read to include "min read"
@@ -22,7 +22,7 @@ export default function CreateBlog() {
         time_to_read: `${data.time_to_read} min read`
       };
       
-      await createBlog(formattedData);
+      await createBlog(formattedData, imageFile);
       
       toast({
         title: "Success",

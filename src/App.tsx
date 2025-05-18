@@ -15,7 +15,7 @@ import Login from "./pages/Login";
 import AdminBlogs from "./pages/AdminBlogs";
 import CreateBlog from "./pages/CreateBlog";
 import EditBlog from "./pages/EditBlog";
-// import AuthGuard from "./components/AuthGuard"; -- Commented out temporarily
+import AuthGuard from "./components/AuthGuard";
 import { setAuthToken } from "./services/adminApi";
 
 const queryClient = new QueryClient();
@@ -43,10 +43,10 @@ const App = () => {
             <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/login" element={<Login />} />
             
-            {/* Admin Routes - Temporarily unprotected */}
-            <Route path="/admin/blogs" element={<AdminBlogs />} />
-            <Route path="/admin/blogs/create" element={<CreateBlog />} />
-            <Route path="/admin/blogs/edit/:id" element={<EditBlog />} />
+            {/* Admin Routes - Protected with AuthGuard */}
+            <Route path="/admin/blogs" element={<AuthGuard><AdminBlogs /></AuthGuard>} />
+            <Route path="/admin/blogs/create" element={<AuthGuard><CreateBlog /></AuthGuard>} />
+            <Route path="/admin/blogs/edit/:id" element={<AuthGuard><EditBlog /></AuthGuard>} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>

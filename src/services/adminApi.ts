@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Blog } from './api';
 
 // Define API base URL
-const API_BASE_URL = 'http://127.0.0.1:8000/api';
+const API_BASE_URL = 'https://muvadplaybox.com/api';
 
 // Create axios instance with proper configuration
 const adminApi = axios.create({
@@ -44,10 +44,39 @@ export const loginAdmin = async (credentials: { username: string; password: stri
   }
 };
 
-// Create a new blog post
-export const createBlog = async (blogData: Partial<Blog>): Promise<Blog> => {
+// Function to upload image and return URL
+export const uploadImage = async (file: File): Promise<string> => {
   try {
-    const response = await adminApi.post('/blogs/create/', blogData);
+    // Create form data for file upload
+    const formData = new FormData();
+    formData.append('image', file);
+
+    // Use multipart/form-data for file upload
+    const response = await adminApi.post('/blogs/upload-image/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response.data.image_url;
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error;
+  }
+};
+
+// Create a new blog post
+export const createBlog = async (blogData: Partial<Blog>, imageFile?: File): Promise<Blog> => {
+  try {
+    let finalData = { ...blogData };
+    
+    // If image file is provided, upload it first
+    if (imageFile) {
+      const imageUrl = await uploadImage(imageFile);
+      finalData.image = imageUrl;
+    }
+    
+    const response = await adminApi.post('/blogs/create/', finalData);
     return response.data;
   } catch (error) {
     console.error('Error creating blog:', error);
@@ -56,9 +85,17 @@ export const createBlog = async (blogData: Partial<Blog>): Promise<Blog> => {
 };
 
 // Update an existing blog post
-export const updateBlog = async (id: number, blogData: Partial<Blog>): Promise<Blog> => {
+export const updateBlog = async (id: number, blogData: Partial<Blog>, imageFile?: File): Promise<Blog> => {
   try {
-    const response = await adminApi.patch(`/blogs/${id}/update/`, blogData);
+    let finalData = { ...blogData };
+    
+    // If image file is provided, upload it first
+    if (imageFile) {
+      const imageUrl = await uploadImage(imageFile);
+      finalData.image = imageUrl;
+    }
+    
+    const response = await adminApi.patch(`/blogs/${id}/update/`, finalData);
     return response.data;
   } catch (error) {
     console.error(`Error updating blog ${id}:`, error);

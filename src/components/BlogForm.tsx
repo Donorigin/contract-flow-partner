@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -25,7 +25,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Blog } from "@/services/api";
-import { Calendar, Clock, User, FileText, Image, Tag } from "lucide-react";
+import { Calendar, Clock, User, FileText, Image, Tag, Upload } from "lucide-react";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -38,19 +38,21 @@ const blogSchema = z.object({
   category: z.string().min(2, { message: "Category is required" }),
   time_to_read: z.string().min(1, { message: "Time to read is required" }),
   published_date: z.string().min(1, { message: "Publication date is required" }),
-  image: z.string().optional(),
 });
 
 export type BlogFormValues = z.infer<typeof blogSchema>;
 
 type BlogFormProps = {
   initialData?: Blog;
-  onSubmit: (data: BlogFormValues) => void;
+  onSubmit: (data: BlogFormValues, imageFile?: File) => void;
   isLoading: boolean;
 };
 
 export default function BlogForm({ initialData, onSubmit, isLoading }: BlogFormProps) {
   const { toast } = useToast();
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize form with react-hook-form
   const form = useForm<BlogFormValues>({
@@ -63,7 +65,6 @@ export default function BlogForm({ initialData, onSubmit, isLoading }: BlogFormP
       category: "",
       time_to_read: "5",
       published_date: new Date().toISOString().split("T")[0],
-      image: "",
     },
   });
 
@@ -83,10 +84,40 @@ export default function BlogForm({ initialData, onSubmit, isLoading }: BlogFormP
         category: initialData.category || "",
         time_to_read: initialData.time_to_read?.replace(" min read", "") || "5",
         published_date: formattedDate,
-        image: initialData.image || "",
       });
+
+      // Set image preview if there's an existing image
+      if (initialData.image) {
+        setImagePreview(initialData.image);
+      }
     }
   }, [initialData, form]);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+      const fileReader = new FileReader();
+      fileReader.onload = (event) => {
+        if (event.target?.result) {
+          setImagePreview(event.target.result as string);
+        }
+      };
+      fileReader.readAsDataURL(file);
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handlePreview = () => {
     const formData = form.getValues();
@@ -97,9 +128,13 @@ export default function BlogForm({ initialData, onSubmit, isLoading }: BlogFormP
     console.log("Preview data:", formData);
   };
 
+  const handleSubmitWithImage = (data: BlogFormValues) => {
+    onSubmit(data, selectedImage || undefined);
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(handleSubmitWithImage)}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -192,6 +227,77 @@ export default function BlogForm({ initialData, onSubmit, isLoading }: BlogFormP
                       </FormItem>
                     )}
                   />
+
+                  {/* Image Upload Section */}
+                  <div className="space-y-2">
+                    <FormLabel className="flex items-center">
+                      <Image className="h-4 w-4 mr-2 text-muvad-blue" /> Featured Image
+                    </FormLabel>
+                    
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleImageChange}
+                      accept="image/*"
+                      className="hidden"
+                      disabled={isLoading}
+                    />
+                    
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                      {imagePreview ? (
+                        <div className="space-y-4">
+                          <div className="relative mx-auto max-w-md">
+                            <img 
+                              src={imagePreview} 
+                              alt="Image preview" 
+                              className="max-h-40 mx-auto object-contain rounded-md"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="absolute top-0 right-0 bg-white rounded-full h-6 w-6 p-1"
+                              onClick={handleRemoveImage}
+                            >
+                              <span className="sr-only">Remove image</span>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                            </Button>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={triggerFileInput}
+                            disabled={isLoading}
+                          >
+                            Change Image
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <div className="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-gray-100">
+                            <Upload className="h-10 w-10 text-gray-400" />
+                          </div>
+                          <div className="space-y-1">
+                            <p className="text-sm font-medium">
+                              Drop your image here, or{" "}
+                              <Button
+                                type="button"
+                                variant="link"
+                                className="p-0 h-auto"
+                                onClick={triggerFileInput}
+                                disabled={isLoading}
+                              >
+                                browse
+                              </Button>
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              Supports JPG, PNG or GIF up to 10MB
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </TabsContent>
               
                 <TabsContent value="metadata" className="space-y-6 mt-0">
@@ -284,30 +390,6 @@ export default function BlogForm({ initialData, onSubmit, isLoading }: BlogFormP
                       )}
                     />
                   </div>
-                
-                  <FormField
-                    control={form.control}
-                    name="image"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center">
-                          <Image className="h-4 w-4 mr-2 text-muvad-blue" /> Featured Image URL
-                        </FormLabel>
-                        <FormControl>
-                          <Input 
-                            placeholder="https://example.com/image.jpg" 
-                            disabled={isLoading} 
-                            className="border-gray-300 focus-visible:ring-muvad-blue"
-                            {...field} 
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Enter a URL for the blog post's featured image
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </TabsContent>
               </CardContent>
             </Tabs>

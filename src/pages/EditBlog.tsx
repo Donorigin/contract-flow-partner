@@ -53,7 +53,7 @@ export default function EditBlog() {
     fetchBlogData();
   }, [id, toast]);
 
-  const handleSubmit = async (data: BlogFormValues) => {
+  const handleSubmit = async (data: BlogFormValues, imageFile?: File) => {
     if (!id) return;
     
     setIsSaving(true);
@@ -64,7 +64,7 @@ export default function EditBlog() {
         time_to_read: `${data.time_to_read} min read`
       };
       
-      await updateBlog(parseInt(id), formattedData);
+      await updateBlog(parseInt(id), formattedData, imageFile);
       
       toast({
         title: "Success",
