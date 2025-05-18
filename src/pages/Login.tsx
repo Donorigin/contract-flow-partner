@@ -199,7 +199,7 @@ export default function Login() {
             </motion.div>
 
             {/* Temporary for development - added bypass button */}
-            <div className="text-center mt-4">
+            {/* <div className="text-center mt-4">
               <Button 
                 type="button" 
                 variant="ghost" 
@@ -208,7 +208,7 @@ export default function Login() {
               >
                 Bypass Login (Development Only)
               </Button>
-            </div>
+            </div> */}
           </form>
         </Form>
       </motion.div>
