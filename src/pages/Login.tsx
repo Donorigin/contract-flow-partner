@@ -48,7 +48,13 @@ export default function Login() {
     setIsLoading(true);
     
     try {
-      const response = await loginAdmin(data);
+      // Ensure data has the required properties as non-optional
+      const credentials = {
+        username: data.username,
+        password: data.password
+      };
+      
+      const response = await loginAdmin(credentials);
       
       toast({
         title: "Login successful",

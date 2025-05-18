@@ -32,7 +32,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Edit, Plus, Trash2, Search, MoreVertical, Calendar, User } from "lucide-react";
+import { Edit, Plus, Trash2, Search, MoreVertical, Calendar, User, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 
