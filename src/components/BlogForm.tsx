@@ -17,6 +17,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -28,6 +35,16 @@ import { Blog } from "@/services/api";
 import { Calendar, Clock, User, FileText, Image, Tag, Upload } from "lucide-react";
 import { motion } from "framer-motion";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+// Define category choices
+const CATEGORY_CHOICES = [
+  "Cleaning",
+  "Drywall",
+  "Painting",
+  "Concrete",
+  "Roofing",
+  "Stucco",
+];
 
 // Form validation schema
 const blogSchema = z.object({
@@ -323,6 +340,7 @@ export default function BlogForm({ initialData, onSubmit, isLoading }: BlogFormP
                       )}
                     />
                   
+                    {/* Category Dropdown - replaced text input with select */}
                     <FormField
                       control={form.control}
                       name="category"
@@ -331,14 +349,25 @@ export default function BlogForm({ initialData, onSubmit, isLoading }: BlogFormP
                           <FormLabel className="flex items-center">
                             <Tag className="h-4 w-4 mr-2 text-muvad-blue" /> Category
                           </FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder="Blog category" 
-                              disabled={isLoading} 
-                              className="border-gray-300 focus-visible:ring-muvad-blue"
-                              {...field} 
-                            />
-                          </FormControl>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            value={field.value}
+                            disabled={isLoading}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="border-gray-300 focus-visible:ring-muvad-blue">
+                                <SelectValue placeholder="Select a category" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {CATEGORY_CHOICES.map((category) => (
+                                <SelectItem key={category} value={category}>
+                                  {category}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}
