@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Eye, EyeOff, LogIn } from "lucide-react";
+import { motion } from "framer-motion";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,18 +18,15 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { loginAdmin } from "@/services/adminApi";
 
 // Form validation schema
 const loginSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" }),
+  username: z.string().min(1, { message: "Username is required" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 type LoginFormValues = z.infer<typeof loginSchema>;
-
-// Mock admin credentials - in a real app, this would come from a secure authentication system
-const ADMIN_EMAIL = "admin@muvadconsults.com";
-const ADMIN_PASSWORD = "admin123"; // This is just for demo purposes
 
 export default function Login() {
   const navigate = useNavigate();
@@ -40,47 +38,61 @@ export default function Login() {
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      username: "",
       password: "",
     },
   });
 
   // Handle form submission
-  const onSubmit = (data: LoginFormValues) => {
+  const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     
-    // Simulate API call with timeout - temporarily bypass credential check
-    setTimeout(() => {
-      // Store authentication state in localStorage (in a real app, use a more secure method)
-      localStorage.setItem("isAuthenticated", "true");
+    try {
+      const response = await loginAdmin(data);
       
       toast({
         title: "Login successful",
-        description: "Welcome to the admin dashboard",
+        description: `Welcome, ${response.user.username}!`,
       });
+      
+      // Store user info in localStorage
+      localStorage.setItem("user", JSON.stringify(response.user));
       
       // Redirect to admin dashboard
       navigate("/admin/blogs");
+    } catch (error: any) {
+      console.error("Login error:", error);
       
+      toast({
+        title: "Login failed",
+        description: error.response?.data?.detail || "Invalid credentials. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
-    }, 500);
+    }
   };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  // Temporary bypass function - added for development
+  // Temporary bypass function for development
   const bypassLogin = () => {
-    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("authToken", "development_token");
     navigate("/admin/blogs");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muvad-grey py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-muvad-grey to-white py-12 px-4 sm:px-6 lg:px-8">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg border border-gray-100"
+      >
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold text-muvad-darkGrey">Admin Login</h2>
+          <h2 className="mt-6 text-3xl font-bold text-muvad-blue">Admin Login</h2>
           <p className="mt-2 text-sm text-gray-600">
             Enter your credentials to access the admin dashboard
           </p>
@@ -88,79 +100,97 @@ export default function Login() {
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="admin@example.com" 
-                      type="email" 
-                      disabled={isLoading}
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        placeholder="••••••••"
-                        type={showPassword ? "text" : "password"}
-                        disabled={isLoading}
-                        className="pr-10"
-                        {...field}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-0 top-0 h-full"
-                        onClick={togglePasswordVisibility}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                        <span className="sr-only">
-                          {showPassword ? "Hide password" : "Show password"}
-                        </span>
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <Button 
-              type="submit" 
-              className="w-full bg-muvad-blue" 
-              disabled={isLoading}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
             >
-              {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <span className="animate-spin mr-2 h-4 w-4 border-2 border-t-transparent border-white rounded-full"></span>
-                  Logging in...
-                </div>
-              ) : (
-                <>
-                  <LogIn className="mr-2 h-4 w-4" /> Sign In
-                </>
-              )}
-            </Button>
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="admin" 
+                        className="border-muvad-lightBlue focus-visible:ring-muvad-blue"
+                        disabled={isLoading}
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          placeholder="••••••••"
+                          type={showPassword ? "text" : "password"}
+                          className="border-muvad-lightBlue focus-visible:ring-muvad-blue pr-10"
+                          disabled={isLoading}
+                          {...field}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-0 top-0 h-full"
+                          onClick={togglePasswordVisibility}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                          <span className="sr-only">
+                            {showPassword ? "Hide password" : "Show password"}
+                          </span>
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              <Button 
+                type="submit" 
+                className="w-full bg-muvad-blue hover:bg-blue-700 transition-colors duration-300" 
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center">
+                    <span className="animate-spin mr-2 h-4 w-4 border-2 border-t-transparent border-white rounded-full"></span>
+                    Logging in...
+                  </div>
+                ) : (
+                  <>
+                    <LogIn className="mr-2 h-4 w-4" /> Sign In
+                  </>
+                )}
+              </Button>
+            </motion.div>
 
             {/* Temporary for development - added bypass button */}
             <div className="text-center mt-4">
@@ -168,14 +198,14 @@ export default function Login() {
                 type="button" 
                 variant="ghost" 
                 onClick={bypassLogin}
-                className="text-sm"
+                className="text-sm text-gray-400 hover:text-gray-600"
               >
                 Bypass Login (Development Only)
               </Button>
             </div>
           </form>
         </Form>
-      </div>
+      </motion.div>
     </div>
   );
 }

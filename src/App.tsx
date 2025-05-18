@@ -1,4 +1,5 @@
 
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,33 +16,44 @@ import AdminBlogs from "./pages/AdminBlogs";
 import CreateBlog from "./pages/CreateBlog";
 import EditBlog from "./pages/EditBlog";
 // import AuthGuard from "./components/AuthGuard"; -- Commented out temporarily
+import { setAuthToken } from "./services/adminApi";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-and-condition" element={<TermsAndConditions />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:id" element={<BlogDetail />} />
-          <Route path="/login" element={<Login />} />
-          
-          {/* Admin Routes - Temporarily unprotected */}
-          <Route path="/admin/blogs" element={<AdminBlogs />} />
-          <Route path="/admin/blogs/create" element={<CreateBlog />} />
-          <Route path="/admin/blogs/edit/:id" element={<EditBlog />} />
-          
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  // Initialize admin auth token from localStorage if available
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setAuthToken(token);
+    }
+  }, []);
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-and-condition" element={<TermsAndConditions />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:id" element={<BlogDetail />} />
+            <Route path="/login" element={<Login />} />
+            
+            {/* Admin Routes - Temporarily unprotected */}
+            <Route path="/admin/blogs" element={<AdminBlogs />} />
+            <Route path="/admin/blogs/create" element={<CreateBlog />} />
+            <Route path="/admin/blogs/edit/:id" element={<EditBlog />} />
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

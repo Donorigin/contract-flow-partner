@@ -1,9 +1,11 @@
 
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, LogOut, Home, FileText } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Menu, X, LogOut, Home, FileText, Grid } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-// import { useAuth } from "@/hooks/useAuth"; -- Temporarily removed
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { setAuthToken } from "@/services/adminApi";
 
 type AdminLayoutProps = {
   children: React.ReactNode;
@@ -11,17 +13,31 @@ type AdminLayoutProps = {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  // const { logout } = useAuth(); -- Temporarily removed
+  const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // Get user from localStorage if available
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
   const handleLogout = () => {
-    // Temporary simplified logout that doesn't use useAuth
-    localStorage.removeItem("isAuthenticated");
+    setAuthToken("");
+    localStorage.removeItem("user");
     navigate("/login");
+  };
+
+  // Check if the current route matches the given path
+  const isActive = (path: string) => {
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
 
   return (
@@ -32,62 +48,100 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           variant="outline"
           size="icon"
           onClick={toggleSidebar}
-          className="bg-white"
+          className="bg-white shadow-md"
         >
           <Menu className="h-4 w-4" />
         </Button>
       </div>
 
       {/* Sidebar */}
-      <div
-        className={`${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-30 w-64 transform bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:translate-x-0`}
+      <motion.div
+        initial={{ x: -250 }}
+        animate={{ x: sidebarOpen ? 0 : -250 }}
+        transition={{ ease: "easeOut", duration: 0.3 }}
+        className="lg:static fixed lg:translate-x-0 inset-y-0 left-0 z-30 w-64 bg-white shadow-lg border-r border-gray-200"
       >
-        <div className="flex items-center justify-between p-4">
-          <h1 className="text-xl font-bold text-muvad-blue">Admin Panel</h1>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className="lg:hidden"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
+        <div className="flex flex-col h-full">
+          <div className="flex items-center justify-between p-6 border-b">
+            <Link to="/admin/blogs" className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-muvad-blue rounded-md flex items-center justify-center">
+                <Grid className="h-5 w-5 text-white" />
+              </div>
+              <h1 className="text-xl font-bold text-muvad-blue">Muvad Admin</h1>
+            </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleSidebar}
+              className="lg:hidden"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
 
-        <nav className="space-y-1 px-2 py-4">
-          <Link
-            to="/"
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-muvad-blue rounded-md"
-          >
-            <Home className="h-4 w-4 mr-3" />
-            Go to Website
-          </Link>
-          <Link
-            to="/admin/blogs"
-            className="flex items-center px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-muvad-blue rounded-md"
-          >
-            <FileText className="h-4 w-4 mr-3" />
-            Manage Blogs
-          </Link>
-        </nav>
+          <nav className="flex-1 overflow-y-auto p-4 space-y-1">
+            <Link
+              to="/"
+              className={`flex items-center px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-muvad-blue rounded-md transition-colors duration-200 ${
+                isActive("/") ? "bg-blue-50 text-muvad-blue font-medium" : ""
+              }`}
+            >
+              <Home className="h-5 w-5 mr-3" />
+              Go to Website
+            </Link>
+            <Link
+              to="/admin/blogs"
+              className={`flex items-center px-4 py-3 text-gray-600 hover:bg-blue-50 hover:text-muvad-blue rounded-md transition-colors duration-200 ${
+                isActive("/admin/blogs") ? "bg-blue-50 text-muvad-blue font-medium" : ""
+              }`}
+            >
+              <FileText className="h-5 w-5 mr-3" />
+              Manage Blogs
+            </Link>
+          </nav>
 
-        <div className="absolute bottom-0 w-full p-4">
-          <Button
-            variant="ghost"
-            className="w-full flex items-center justify-center text-red-500 hover:bg-red-50"
-            onClick={handleLogout}
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
+          <div className="border-t p-4">
+            {user ? (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Avatar>
+                    <AvatarImage src="" />
+                    <AvatarFallback className="bg-muvad-blue text-white">
+                      {user.username?.charAt(0).toUpperCase() || "A"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">{user.username || "Admin"}</span>
+                    <span className="text-xs text-gray-500">{user.email || "admin@example.com"}</span>
+                  </div>
+                </div>
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-red-500 hover:bg-red-50 hover:text-red-600"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="ghost"
+                className="w-full flex items-center justify-center text-red-500 hover:bg-red-50"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Logout
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Main content */}
       <div className="flex flex-col flex-1 overflow-hidden">
-        <main className="flex-1 overflow-y-auto p-4 bg-gray-50">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-8 bg-gray-50">
           {children}
         </main>
       </div>

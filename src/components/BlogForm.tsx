@@ -12,9 +12,22 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Blog } from "@/services/api";
+import { Calendar, Clock, User, FileText, Image, Tag } from "lucide-react";
+import { motion } from "framer-motion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Form validation schema
 const blogSchema = z.object({
@@ -68,153 +81,261 @@ export default function BlogForm({ initialData, onSubmit, isLoading }: BlogFormP
         content: initialData.content || "",
         excerpt: initialData.excerpt || "",
         category: initialData.category || "",
-        time_to_read: initialData.time_to_read || "5",
+        time_to_read: initialData.time_to_read?.replace(" min read", "") || "5",
         published_date: formattedDate,
         image: initialData.image || "",
       });
     }
   }, [initialData, form]);
 
+  const handlePreview = () => {
+    const formData = form.getValues();
+    toast({
+      title: "Blog Post Preview",
+      description: "Preview functionality would show here in a real application.",
+    });
+    console.log("Preview data:", formData);
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input placeholder="Blog post title" disabled={isLoading} {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <FormControl>
-                  <Input placeholder="Category" disabled={isLoading} {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <FormField
-            control={form.control}
-            name="author"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Author</FormLabel>
-                <FormControl>
-                  <Input placeholder="Author name" disabled={isLoading} {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="time_to_read"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Time to read (minutes)</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="5" 
-                    disabled={isLoading} 
-                    {...field}
-                    onChange={e => field.onChange(e.target.value)}
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Card className="border border-gray-200 shadow-sm">
+            <CardHeader className="border-b bg-white">
+              <CardTitle className="text-xl">
+                {initialData ? "Edit Blog Post" : "Create New Blog Post"}
+              </CardTitle>
+              <CardDescription>
+                {initialData ? "Update your blog post details below" : "Fill in the details for your new blog post"}
+              </CardDescription>
+            </CardHeader>
+            
+            <Tabs defaultValue="content" className="w-full">
+              <CardContent className="p-6 pt-6 border-b bg-white">
+                <TabsList className="w-full max-w-md mb-6">
+                  <TabsTrigger value="content" className="flex-1">
+                    <FileText className="h-4 w-4 mr-2" /> Content
+                  </TabsTrigger>
+                  <TabsTrigger value="metadata" className="flex-1">
+                    <Tag className="h-4 w-4 mr-2" /> Metadata
+                  </TabsTrigger>
+                </TabsList>
+              
+                <TabsContent value="content" className="space-y-6 mt-0">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center">
+                          <FileText className="h-4 w-4 mr-2 text-muvad-blue" /> Title
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="Enter the blog title" 
+                            disabled={isLoading} 
+                            className="border-gray-300 focus-visible:ring-muvad-blue"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="published_date"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Publication Date</FormLabel>
-                <FormControl>
-                  <Input type="date" disabled={isLoading} {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <FormField
-          control={form.control}
-          name="image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Image URL</FormLabel>
-              <FormControl>
-                <Input placeholder="https://example.com/image.jpg" disabled={isLoading} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="excerpt"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Excerpt</FormLabel>
-              <FormControl>
-                <Input placeholder="Short excerpt for the blog post" disabled={isLoading} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Content</FormLabel>
-              <FormControl>
-                <textarea 
-                  className="flex min-h-[200px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Blog post content (supports markdown)"
-                  disabled={isLoading}
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="flex justify-end">
-          <Button type="submit" className="bg-muvad-blue" disabled={isLoading}>
-            {isLoading ? (
-              <div className="flex items-center">
-                <span className="animate-spin mr-2 h-4 w-4 border-2 border-t-transparent border-white rounded-full"></span>
-                Saving...
-              </div>
-            ) : initialData ? "Update Blog Post" : "Create Blog Post"}
-          </Button>
-        </div>
+                
+                  <FormField
+                    control={form.control}
+                    name="excerpt"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center">
+                          <FileText className="h-4 w-4 mr-2 text-muvad-blue" /> Excerpt
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="A short summary of your blog post" 
+                            disabled={isLoading} 
+                            className="border-gray-300 focus-visible:ring-muvad-blue"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          A brief summary that will appear in blog listings
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                
+                  <FormField
+                    control={form.control}
+                    name="content"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center">
+                          <FileText className="h-4 w-4 mr-2 text-muvad-blue" /> Content
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea 
+                            placeholder="Write your blog post content here... (Markdown supported)" 
+                            className="min-h-[300px] resize-y border-gray-300 focus-visible:ring-muvad-blue"
+                            disabled={isLoading}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </TabsContent>
+              
+                <TabsContent value="metadata" className="space-y-6 mt-0">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="author"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center">
+                            <User className="h-4 w-4 mr-2 text-muvad-blue" /> Author
+                          </FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Author name" 
+                              disabled={isLoading} 
+                              className="border-gray-300 focus-visible:ring-muvad-blue"
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  
+                    <FormField
+                      control={form.control}
+                      name="category"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center">
+                            <Tag className="h-4 w-4 mr-2 text-muvad-blue" /> Category
+                          </FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="Blog category" 
+                              disabled={isLoading} 
+                              className="border-gray-300 focus-visible:ring-muvad-blue"
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="published_date"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center">
+                            <Calendar className="h-4 w-4 mr-2 text-muvad-blue" /> Publication Date
+                          </FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="date" 
+                              disabled={isLoading} 
+                              className="border-gray-300 focus-visible:ring-muvad-blue"
+                              {...field} 
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  
+                    <FormField
+                      control={form.control}
+                      name="time_to_read"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center">
+                            <Clock className="h-4 w-4 mr-2 text-muvad-blue" /> Reading Time (minutes)
+                          </FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="number" 
+                              placeholder="5" 
+                              disabled={isLoading}
+                              className="border-gray-300 focus-visible:ring-muvad-blue" 
+                              {...field}
+                              onChange={e => field.onChange(e.target.value)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                
+                  <FormField
+                    control={form.control}
+                    name="image"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center">
+                          <Image className="h-4 w-4 mr-2 text-muvad-blue" /> Featured Image URL
+                        </FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="https://example.com/image.jpg" 
+                            disabled={isLoading} 
+                            className="border-gray-300 focus-visible:ring-muvad-blue"
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Enter a URL for the blog post's featured image
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </TabsContent>
+              </CardContent>
+            </Tabs>
+            
+            <CardFooter className="flex justify-between bg-gray-50 px-6 py-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handlePreview}
+                disabled={isLoading}
+              >
+                Preview
+              </Button>
+              <Button 
+                type="submit" 
+                className="bg-muvad-blue hover:bg-blue-700 transition-colors"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <div className="flex items-center">
+                    <span className="animate-spin mr-2 h-4 w-4 border-2 border-t-transparent border-white rounded-full"></span>
+                    {initialData ? "Updating..." : "Creating..."}
+                  </div>
+                ) : initialData ? "Update Post" : "Create Post"}
+              </Button>
+            </CardFooter>
+          </Card>
+        </motion.div>
       </form>
     </Form>
   );
