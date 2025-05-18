@@ -16,11 +16,18 @@ export default function CreateBlog() {
   const handleSubmit = async (data: BlogFormValues, imageFile?: File) => {
     setIsLoading(true);
     try {
-      // Format the time_to_read to include "min read"
+      // Format the time_to_read to include "min read" if it doesn't already
+      const timeToRead = data.time_to_read.includes("min read") 
+        ? data.time_to_read 
+        : `${data.time_to_read} min read`;
+        
       const formattedData = {
         ...data,
-        time_to_read: `${data.time_to_read} min read`
+        time_to_read: timeToRead
       };
+      
+      console.log("Submitting blog data:", formattedData);
+      console.log("With image file:", imageFile);
       
       await createBlog(formattedData, imageFile);
       
@@ -32,9 +39,15 @@ export default function CreateBlog() {
       navigate("/admin/blogs");
     } catch (error: any) {
       console.error("Error creating blog post:", error);
+      
+      const errorMessage = error.response?.data?.detail || 
+                          error.response?.data?.message ||
+                          error.message ||
+                          "Failed to create blog post";
+      
       toast({
         title: "Error",
-        description: error.response?.data?.detail || "Failed to create blog post",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

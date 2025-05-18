@@ -72,12 +72,32 @@ export const createBlog = async (blogData: Partial<Blog>, imageFile?: File): Pro
     
     // If image file is provided, upload it first
     if (imageFile) {
-      const imageUrl = await uploadImage(imageFile);
-      finalData.image = imageUrl;
+      // For multipart/form-data request with both data and file
+      const formData = new FormData();
+      
+      // Append all blog data fields to the form
+      Object.entries(finalData).forEach(([key, value]) => {
+        if (value !== undefined) {
+          formData.append(key, value as string);
+        }
+      });
+      
+      // Append the image file
+      formData.append('image', imageFile);
+      
+      // Send the multipart request
+      const response = await adminApi.post('/blogs/create/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      return response.data;
+    } else {
+      // If no image, send a regular JSON request
+      const response = await adminApi.post('/blogs/create/', finalData);
+      return response.data;
     }
-    
-    const response = await adminApi.post('/blogs/create/', finalData);
-    return response.data;
   } catch (error) {
     console.error('Error creating blog:', error);
     throw error;
@@ -89,14 +109,33 @@ export const updateBlog = async (id: number, blogData: Partial<Blog>, imageFile?
   try {
     let finalData = { ...blogData };
     
-    // If image file is provided, upload it first
+    // If image file is provided, handle as multipart/form-data
     if (imageFile) {
-      const imageUrl = await uploadImage(imageFile);
-      finalData.image = imageUrl;
+      const formData = new FormData();
+      
+      // Append all blog data fields to the form
+      Object.entries(finalData).forEach(([key, value]) => {
+        if (value !== undefined) {
+          formData.append(key, value as string);
+        }
+      });
+      
+      // Append the image file
+      formData.append('image', imageFile);
+      
+      // Send the multipart request
+      const response = await adminApi.patch(`/blogs/${id}/update/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      
+      return response.data;
+    } else {
+      // If no image, send a regular JSON request
+      const response = await adminApi.patch(`/blogs/${id}/update/`, finalData);
+      return response.data;
     }
-    
-    const response = await adminApi.patch(`/blogs/${id}/update/`, finalData);
-    return response.data;
   } catch (error) {
     console.error(`Error updating blog ${id}:`, error);
     throw error;
