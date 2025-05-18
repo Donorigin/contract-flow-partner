@@ -12,7 +12,7 @@ type AdminLayoutProps = {
 };
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true); // Default to open on desktop
   const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,7 +59,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         initial={{ x: -250 }}
         animate={{ x: sidebarOpen ? 0 : -250 }}
         transition={{ ease: "easeOut", duration: 0.3 }}
-        className="lg:static fixed lg:translate-x-0 inset-y-0 left-0 z-30 w-64 bg-white shadow-lg border-r border-gray-200"
+        className="fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg border-r border-gray-200 lg:relative lg:transform-none"
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-6 border-b">

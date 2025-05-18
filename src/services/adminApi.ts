@@ -11,7 +11,8 @@ const adminApi = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  // Increase timeout to 30 seconds to allow for larger uploads
+  timeout: 30000,
 });
 
 // Set auth token for admin requests
