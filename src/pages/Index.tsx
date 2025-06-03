@@ -81,7 +81,7 @@ const Index = () => {
       <About />
       
       {/* Testimonials */}
-      <section className="py-16 md:py-24 bg-white">
+      {/* <section className="py-16 md:py-24 bg-white">
         <div className="container">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-muvad-darkGrey mb-4">What Our Clients Say</h2>
@@ -137,7 +137,7 @@ const Index = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       
       {/* Blog Section */}
       <BlogSection />
